@@ -1,15 +1,16 @@
 package StudentManager;
 
+
 public class Course {
 	private String CourseID;
 	private String CourseName;
-	private int Cerdits;
+	private int Credits;
 	private String Description;
 
 	public Course (String CourseID, String CourseName, int Cerdits, String Description) {
 		this.CourseID=CourseID;
 		this.CourseName=CourseName;
-		this.Cerdits=Cerdits;
+		this.Credits=Credits;
 		this.Description=Description;
 	}
 	public String getCourseID() {
@@ -18,8 +19,8 @@ public class Course {
 	public String CourseName() {
 		return CourseName;
 	}
-	public int Cerdits() {
-		return Cerdits;
+	public int Credits() {
+		return Credits;
 	}
 	public String Description() {
 		return Description;
