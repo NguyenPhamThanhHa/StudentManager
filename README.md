@@ -90,4 +90,5 @@ Hệ thống quản lý sinh viên và đăng ký học phần là ứng dụng 
 **- Course:** Lưu trữ thông tin học phần.
 
 **- Enrollment:** Lưu trữ thông tin đăng ký và liên kết sinh viên với học phần.
-** Các khóa chính và khóa ngoại giúp duy trì tính toàn vẹn dữ liệu và mối quan hệ giữa các bản ghi. **
+ 
+Các khóa chính và khóa ngoại giúp duy trì tính toàn vẹn dữ liệu và mối quan hệ giữa các bản ghi.
