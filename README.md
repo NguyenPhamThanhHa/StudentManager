@@ -1,3 +1,100 @@
+# STUDENT MANAGEMENT SYSTEM AND COURSE REGISTRATION
+
+# 1. Introduction
+
+The Student Management System and Course Registration is a Java application designed to manage student information, courses, and course registration processes. The system helps simplify administrative tasks in educational institutions while ensuring accuracy, convenience, and efficiency in course registration.
+
+The application features a graphical user interface built with Java Swing, uses Java Collections for in-memory data processing, and connects to a MySQL database through JDBC for data storage and retrieval. In addition, the system incorporates exception handling and file handling to improve reliability and support data backup and export.
+
+# 2. Main Features
+
+# Student Management
+
+- Add new students
+- Update student information (date of birth, student ID, address, and phone number)
+- Delete student records
+- Search for students
+- Display the list of students
+- Validate input data before adding or updating records
+- Prevent duplicate student IDs
+
+# Course Management
+
+- Add new courses
+- Update course information, including course code, course name, credit hours, and instructor
+- Delete courses when the relevant conditions are satisfied
+- Search for courses by course code or course name
+- Display the list of available courses
+- Validate course information
+- Prevent duplicate course codes
+
+# Course Registration Management
+
+- Allow students to register for courses
+- Display the courses registered by each student
+- Cancel course registrations
+- Retrieve the list of students registered for a specific course
+- Verify that both students and courses exist before registration
+- Prevent duplicate course registrations
+- Validate the number of registered courses or total credit hours according to system-defined limits
+- Display course registration details for each student
+
+# Statistics and Reports
+
+- Display the total number of students
+- Display the total number of courses
+- Count the number of students registered for each course
+- Calculate the total registered credit hours for each student
+- Retrieve the list of students enrolled in a specific course
+- Display statistical reports through the graphical user interface
+
+# Data Management and File Handling
+
+- Export student records to CSV or TXT files
+- Export course records to CSV or TXT files
+- Export course registration records to files
+- Import data from files for initial data entry
+- Display notifications when file operations are completed successfully
+- Handle missing files, access permission errors, and invalid file data
+
+# User Interface
+
+- Build the graphical user interface using Java Swing
+- Display data using JTable
+- Use JTextField for data entry
+- Use JButton to perform operations such as adding, updating, deleting, searching, and registering for courses
+- Use JComboBox to select courses and predefined values
+- Use JOptionPane to display notifications, warnings, and confirmation dialogs
+- Organize the interface into student management, course management, course registration, and statistics sections
+
+# 3. Technologies Used
+
+**- Programming Language:** Java
+
+**- GUI:** Java Swing
+
+**- Database:** MySQL
+
+**- Database Connectivity:** JDBC
+
+**- Core Concepts:** Object-Oriented Programming (OOP), Java Collections Framework
+
+**- Additional Techniques:** File Handling and Exception Handling
+
+# 4. Database Design
+
+# The system is designed around three main entities:
+
+**- Student:** Stores student information.
+
+**- Course:** Stores course information.
+
+**- Enrollment:** Stores course registration records and establishes relationships between students and courses.
+
+Primary keys and foreign keys are used to maintain data integrity and relationships between database records.
+
+=======================================================
+
 # HỆ THỐNG QUẢN LÝ SINH VIÊN VÀ ĐĂNG KÝ HỌC PHẦN
 
 # 1. Giới thiệu
