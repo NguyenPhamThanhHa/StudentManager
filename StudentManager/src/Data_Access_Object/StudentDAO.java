@@ -1,9 +1,10 @@
-package StudentManager;
+package Data_Access_Object;
 
+import model.Student;
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentDAO {
     // Thông tin kết nối Database của bạn (Hãy thay đổi cho khớp với XAMPP/MySQL local)

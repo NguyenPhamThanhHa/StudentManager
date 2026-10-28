@@ -1,4 +1,6 @@
-package StudentManager;
+package Data_Access_Object;
+import model.Course;
+import view.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

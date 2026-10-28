@@ -1,10 +1,12 @@
-package StudentManager;
+package view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
+import Data_Access_Object.StudentDAO;
+import model.Student;
 
 public class StudentView extends JFrame {
     private JTable table;
@@ -14,9 +16,6 @@ public class StudentView extends JFrame {
     // Các ô nhập liệu (Text Fields)
     private JTextField txtStudentID, txtFullName, txtEmail, txtGender, txtPhone, txtAddress, txtMajor, txtClassName, txtGpa, txtDob;
 
-    /**
-     * 
-     */
     public StudentView() {
         studentDAO = new StudentDAO();
         setTitle("Hệ thống Quản lý Sinh viên");
