@@ -69,18 +69,18 @@ Hệ thống quản lý sinh viên và đăng ký học phần là ứng dụng 
 
 # 3.Công nghệ sử dụng
 
-- Ngôn ngữ lập trình: Java
-- Giao diện: Java Swing
-- Cơ sở dữ liệu: MySQL
-- Kết nối cơ sở dữ liệu: JDBC
-- Kiến thức áp dụng: Lập trình hướng đối tượng (OOP), Java Collections Framework
-- Kỹ thuật bổ sung: Xử lý file và xử lý ngoại lệ
+**- Ngôn ngữ lập trình:** Java
+**- Giao diện:** Java Swing
+**- Cơ sở dữ liệu:** MySQL
+**- Kết nối cơ sở dữ liệu:** JDBC
+**- Kiến thức áp dụng:** Lập trình hướng đối tượng (OOP), Java Collections Framework
+**- Kỹ thuật bổ sung:** Xử lý file và xử lý ngoại lệ
 
 # 4.Thiết kế cơ sở dữ liệu
 
 # Hệ thống dự kiến gồm ba thực thể chính:
 
 **- Student:** Lưu trữ thông tin sinh viên.
-- **Course:** Lưu trữ thông tin học phần.
-- **Enrollment:** Lưu trữ thông tin đăng ký và liên kết sinh viên với học phần.
+**- Course:** Lưu trữ thông tin học phần.
+**- Enrollment:** Lưu trữ thông tin đăng ký và liên kết sinh viên với học phần.
 ** Các khóa chính và khóa ngoại giúp duy trì tính toàn vẹn dữ liệu và mối quan hệ giữa các bản ghi. **
