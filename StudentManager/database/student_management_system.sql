@@ -66,3 +66,8 @@ SHOW TABLES;
 SELECT * FROM students;
 SELECT * FROM courses;
 SELECT * FROM registrations;
+USE student_management;
+
+ALTER TABLE courses
+ADD COLUMN lecturer VARCHAR(100),
+ADD COLUMN semester VARCHAR(50);

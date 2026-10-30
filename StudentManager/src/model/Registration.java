@@ -8,7 +8,7 @@ public class Registration {
     public Registration() {}
 
     public Registration(String registrationID, String studentId, String courseId) {
-        this.registrationID = registrationID; // Đã sửa: dùng this. để gán đúng biến
+        this.registrationID = registrationID; 
         this.studentId = studentId;
         this.courseId = courseId;
     }
