@@ -71,3 +71,4 @@ USE student_management;
 ALTER TABLE courses
 ADD COLUMN lecturer VARCHAR(100),
 ADD COLUMN semester VARCHAR(50);
+DESCRIBE courses;
