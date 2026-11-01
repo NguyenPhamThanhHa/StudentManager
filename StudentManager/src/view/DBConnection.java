@@ -2,22 +2,29 @@ package view;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBConnection {
 
     private static final String URL =
-        "jdbc:mysql://localhost:3306/student_management?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&characterEncoding=UTF-8";
+        "jdbc:mysql://localhost:3306/student_management?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
 
     private static final String USER = "root";
-
-    // Thay bằng mật khẩu MySQL trên máy của bạn
-    private static final String PASSWORD = "123456";
+    private static final String PASSWORD = "1911";
 
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (Exception e) {
-            e.printStackTrace();
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            System.out.println("KET NOI MYSQL THANH CONG!");
+
+            return conn;
+
+        } catch (SQLException e) {
+            System.out.println("KET NOI MYSQL THAT BAI!");
+            System.out.println("Ma loi: " + e.getErrorCode());
+            System.out.println("Chi tiet: " + e.getMessage());
+
             return null;
         }
     }

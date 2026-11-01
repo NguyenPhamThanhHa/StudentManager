@@ -1,4 +1,4 @@
-import view.MainFrame;
+import view.LoginView; // Thay thế cho MainFrame
 import javax.swing.*;
 
 public class Main {
@@ -8,9 +8,9 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
 
-        // Khởi chạy giao diện chính trên Event Dispatch Thread
+        // Khởi chạy màn hình đăng nhập trên Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            new MainFrame().setVisible(true);
+            new LoginView().setVisible(true);
         });
     }
 }
