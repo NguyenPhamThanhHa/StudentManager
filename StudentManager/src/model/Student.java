@@ -1,92 +1,117 @@
+
 package model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
-public class Student extends Person {
-    private String StudentID;
-    private String Major;
-    private String ClassName;
-    private double Gpa;
-    
-    // Constructor
-    public Student(String StudentID, String fullName, String email, LocalDate dateOfBirth, String gender, String phone, String address, String Major, String ClassName, double Gpa) {
-        super(fullName, email, dateOfBirth, gender, phone, address);
-        this.StudentID = StudentID;
-        this.Major = Major;
-        this.ClassName = ClassName;
-        this.Gpa = Gpa;
-    }
+public class Student {
 
-    // --- Getter ---
-    public String getStudentID() { 
-        return StudentID;
-    }   
-    public String getMajor() { 
-        return Major;
-    }
-    public String getClassName() { 
-        return ClassName;
-    }
-    public double getGpa() { 
-        return Gpa;
-    }
-    
-    // --- Setter ---
-    public void setStudentID(String studentID) {
-        StudentID = studentID;
-    }
-    public void setMajor(String major) {
-        Major = major;
-    }
-    public void setClassName(String className) {
-        ClassName = className;
-    }
-    public void setGpa(double gpa) {
-        Gpa = gpa;
+    private String studentId;
+    private String fullName;
+    private Date birthDate;
+    private String gender;
+    private String email;
+    private String phone;
+    private String address;
+    private String major;
+    private String className;
+    private Double gpa;
+
+    public Student() {
     }
 
-    // Kế thừa thông qua super (Getter từ lớp Person)
+    public Student(String studentId, String fullName, Date birthDate,
+                   String gender, String email, String phone,
+                   String address, String major, String className,
+                   Double gpa) {
+        this.studentId = studentId;
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.major = major;
+        this.className = className;
+        this.gpa = gpa;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
     public String getFullName() {
-        return super.getFullName();
-    }
-    public String getEmail() {
-        return super.getEmail();
-    }
-    public LocalDate getDateOfBirth() { 
-        return super.getDateOfBirth();
-    }
-    public String getGender() { 
-        return super.getGender();
-    }
-    public String getPhone() { 
-        return super.getPhone();
-    }
-    public String getAddress() {
-        return super.getAddress();
+        return fullName;
     }
 
-    // Kế thừa thông qua super (Setter từ lớp Person nếu cần)
     public void setFullName(String fullName) {
-        super.setFullName(fullName);
-    }
-    public void setEmail(String email) {
-        super.setEmail(email);
-    }
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        super.setDateOfBirth(dateOfBirth);
-    }
-    public void setGender(String gender) {
-        super.setGender(gender);
-    }
-    public void setPhone(String phone) {
-        super.setPhone(phone);
-    }
-    public void setAddress(String address) {
-        super.setAddress(address);
+        this.fullName = fullName;
     }
 
-    @Override
-    public String getRole() {
-        return "Sinh viên";
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public Double getGpa() {
+        return gpa;
+    }
+
+    public void setGpa(Double gpa) {
+        this.gpa = gpa;
     }
 }

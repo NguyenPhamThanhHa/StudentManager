@@ -1,32 +1,32 @@
+
 package model;
-/**
- * User model class.
- */
+
 public class User {
 
-    private int userID;
+    private int userId;
     private String username;
     private String password;
     private String role;
-    private String studentID;
+    private String studentId;
 
     public User() {
     }
 
-    public User(int userID, String username, String password, String role, String studentID) {
-        this.userID = userID;
+    public User(int userId, String username, String password,
+                String role, String studentId) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.studentID = studentID;
+        this.studentId = studentId;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -53,11 +53,19 @@ public class User {
         this.role = role;
     }
 
-    public String getStudentID() {
-        return studentID;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setStudentID(String studentID) {
-        this.studentID = studentID;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public boolean isAdmin() {
+        return "ADMIN".equalsIgnoreCase(role);
+    }
+
+    public boolean isStudent() {
+        return "STUDENT".equalsIgnoreCase(role);
     }
 }

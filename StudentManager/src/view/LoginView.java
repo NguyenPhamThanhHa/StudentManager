@@ -1,8 +1,8 @@
+
 package view;
 
 import javax.swing.*;
 import java.awt.*;
-
 
 import Data_Access_Object.userDAO;
 import model.User;
@@ -12,7 +12,7 @@ public class LoginView extends JFrame {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
 
-    private userDAO userDAO = new userDAO();
+    private final userDAO userDAO = new userDAO();
 
     public LoginView() {
 
@@ -20,17 +20,20 @@ public class LoginView extends JFrame {
         setSize(400, 280);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        setLayout(new BorderLayout(10, 10));
 
         JLabel lblTitle = new JLabel("ĐĂNG NHẬP", JLabel.CENTER);
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
 
         txtUsername = new JTextField();
         txtPassword = new JPasswordField();
 
         JButton btnLogin = new JButton("Đăng nhập");
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 15));
+        panel.setBorder(
+            BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        );
 
         panel.add(new JLabel("Tài khoản:"));
         panel.add(txtUsername);
@@ -45,7 +48,6 @@ public class LoginView extends JFrame {
         add(panel, BorderLayout.CENTER);
 
         btnLogin.addActionListener(e -> login());
-
         txtPassword.addActionListener(e -> login());
     }
 
@@ -55,38 +57,40 @@ public class LoginView extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
+            JOptionPane.showMessageDialog(
+                this,
+                "Vui lòng nhập đầy đủ tài khoản và mật khẩu!",
+                "Thông báo",
+                JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
 
         User user = userDAO.login(username, password);
 
-        if (user != null) {
-
-            JOptionPane.showMessageDialog(this,
-                "Đăng nhập thành công!");
-
-            new MainView(user).setVisible(true);
-            dispose();
-
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "Tài khoản hoặc mật khẩu không chính xác!");
+        if (user == null) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Tài khoản hoặc mật khẩu không chính xác!",
+                "Đăng nhập thất bại",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
         }
-    }
 
-public static void main(String[] args) {
-    try {
-        UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName()
-        );
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+        if (user.isStudent() &&
+                (user.getStudentId() == null ||
+                 user.getStudentId().isBlank())) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Tài khoản sinh viên chưa được liên kết mã sinh viên!",
+                "Lỗi tài khoản",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
 
-    SwingUtilities.invokeLater(() -> {
-        new LoginView().setVisible(true);
-    });
-}
+        new MainView(user).setVisible(true);
+        dispose();
+    }
 }

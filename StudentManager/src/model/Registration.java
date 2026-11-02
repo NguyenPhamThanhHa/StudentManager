@@ -1,25 +1,42 @@
+
 package model;
 
+import java.sql.Date;
+
 public class Registration {
-    private String registrationID;
+
+    private int registrationId;
     private String studentId;
+    private String fullName;
+    private int classId;
     private String courseId;
+    private String courseName;
+    private Date registrationDate;
+    private Double score;
 
-    public Registration() {}
+    public Registration() {
+    }
 
-    public Registration(String registrationID, String studentId, String courseId) {
-        this.registrationID = registrationID; 
+    public Registration(int registrationId, String studentId,
+                        String fullName, int classId,
+                        String courseId, String courseName,
+                        Date registrationDate, Double score) {
+        this.registrationId = registrationId;
         this.studentId = studentId;
+        this.fullName = fullName;
+        this.classId = classId;
         this.courseId = courseId;
+        this.courseName = courseName;
+        this.registrationDate = registrationDate;
+        this.score = score;
     }
 
-    // Getters và Setters
-    public String getRegistrationID() {
-        return registrationID;
+    public int getRegistrationId() {
+        return registrationId;
     }
 
-    public void setRegistrationID(String registrationID) {
-        this.registrationID = registrationID;
+    public void setRegistrationId(int registrationId) {
+        this.registrationId = registrationId;
     }
 
     public String getStudentId() {
@@ -30,11 +47,51 @@ public class Registration {
         this.studentId = studentId;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public int getClassId() {
+        return classId;
+    }
+
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
     public String getCourseId() {
         return courseId;
     }
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 }

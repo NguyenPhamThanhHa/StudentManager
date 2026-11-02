@@ -1,14 +1,20 @@
-import view.LoginView; // Thay thế cho MainFrame
-import javax.swing.*;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import view.LoginView;
 
 public class Main {
-    public static void main(String[] args) {
-        // Đồng bộ giao diện theo hệ điều hành
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
 
-        // Khởi chạy màn hình đăng nhập trên Event Dispatch Thread
+    public static void main(String[] args) {
+
+        try {
+            UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         SwingUtilities.invokeLater(() -> {
             new LoginView().setVisible(true);
         });

@@ -1,4 +1,3 @@
-
 package view;
 
 import javax.swing.*;
@@ -6,7 +5,8 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.time.LocalDate;
+import java.awt.FlowLayout;
+import java.sql.Date;
 import java.util.List;
 
 import Data_Access_Object.StudentDAO;
@@ -16,6 +16,7 @@ public class StudentView extends JFrame {
 
     private JTable table;
     private DefaultTableModel tableModel;
+
     private StudentDAO studentDAO;
 
     private JTextField txtStudentID;
@@ -29,23 +30,64 @@ public class StudentView extends JFrame {
     private JTextField txtGpa;
     private JTextField txtDob;
 
+    // ==========================================
+    // CONSTRUCTOR
+    // ==========================================
+
     public StudentView() {
 
         studentDAO = new StudentDAO();
 
-        setTitle("Hệ thống Quản lý Sinh viên");
-        setSize(1000, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Hệ thống quản lý sinh viên");
+        setSize(1100, 700);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
 
-        // 1. Bảng sinh viên
+        initComponents();
+        loadDataToTable();
+    }
+
+    // ==========================================
+    // 1. KHỞI TẠO GIAO DIỆN
+    // ==========================================
+
+    private void initComponents() {
+
+        // Tiêu đề
+        JLabel lblTitle = new JLabel(
+            "QUẢN LÝ SINH VIÊN",
+            JLabel.CENTER
+        );
+
+        lblTitle.setFont(new java.awt.Font(
+            "Arial",
+            java.awt.Font.BOLD,
+            22
+        ));
+
+        lblTitle.setBorder(
+            BorderFactory.createEmptyBorder(15, 10, 15, 10)
+        );
+
+        add(lblTitle, BorderLayout.NORTH);
+
+        // Bảng sinh viên
         String[] columnNames = {
-            "Mã SV", "Họ tên", "Email", "Ngày sinh",
-            "Giới tính", "SĐT", "Địa chỉ", "Ngành", "Lớp", "GPA"
+            "Mã SV",
+            "Họ tên",
+            "Email",
+            "Ngày sinh",
+            "Giới tính",
+            "SĐT",
+            "Địa chỉ",
+            "Ngành",
+            "Lớp",
+            "GPA"
         };
 
         tableModel = new DefaultTableModel(columnNames, 0) {
+
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -53,237 +95,469 @@ public class StudentView extends JFrame {
         };
 
         table = new JTable(tableModel);
-        add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // 2. Form nhập liệu
-        JPanel panelBottom = new JPanel(new GridLayout(2, 1));
-        JPanel panelFields = new JPanel(new GridLayout(5, 4, 5, 5));
-
-        panelFields.setBorder(
-            BorderFactory.createTitledBorder("Thông tin sinh viên")
+        table.setRowHeight(25);
+        table.setSelectionMode(
+            ListSelectionModel.SINGLE_SELECTION
         );
 
-        panelFields.add(new JLabel("Mã SV:"));
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Form nhập thông tin
+        JPanel panelBottom = new JPanel(new BorderLayout(5, 5));
+
+        JPanel panelFields = new JPanel(
+            new GridLayout(5, 4, 8, 8)
+        );
+
+        panelFields.setBorder(
+            BorderFactory.createTitledBorder(
+                "Thông tin sinh viên"
+            )
+        );
+
+        // Mã sinh viên
+        panelFields.add(new JLabel("Mã sinh viên:"));
         txtStudentID = new JTextField();
         panelFields.add(txtStudentID);
 
+        // Họ tên
         panelFields.add(new JLabel("Họ tên:"));
         txtFullName = new JTextField();
         panelFields.add(txtFullName);
 
+        // Email
         panelFields.add(new JLabel("Email:"));
         txtEmail = new JTextField();
         panelFields.add(txtEmail);
 
+        // Ngày sinh
         panelFields.add(new JLabel("Ngày sinh (YYYY-MM-DD):"));
         txtDob = new JTextField();
         panelFields.add(txtDob);
 
+        // Giới tính
         panelFields.add(new JLabel("Giới tính:"));
         txtGender = new JTextField();
         panelFields.add(txtGender);
 
+        // Số điện thoại
         panelFields.add(new JLabel("Số điện thoại:"));
         txtPhone = new JTextField();
         panelFields.add(txtPhone);
 
+        // Địa chỉ
         panelFields.add(new JLabel("Địa chỉ:"));
         txtAddress = new JTextField();
         panelFields.add(txtAddress);
 
+        // Ngành học
         panelFields.add(new JLabel("Ngành học:"));
         txtMajor = new JTextField();
         panelFields.add(txtMajor);
 
+        // Lớp
         panelFields.add(new JLabel("Lớp:"));
         txtClassName = new JTextField();
         panelFields.add(txtClassName);
 
-        panelFields.add(new JLabel("GPA:"));
+        // GPA
+        panelFields.add(new JLabel("GPA (0 - 4):"));
         txtGpa = new JTextField();
         panelFields.add(txtGpa);
 
-        panelBottom.add(panelFields);
+        panelBottom.add(panelFields, BorderLayout.CENTER);
 
-        // 3. Các nút chức năng
-        JPanel panelButtons = new JPanel();
+        // Các nút chức năng
+        JPanel panelButtons = new JPanel(
+            new FlowLayout(FlowLayout.CENTER, 12, 10)
+        );
 
         JButton btnAdd = new JButton("Thêm sinh viên");
+        JButton btnUpdate = new JButton("Cập nhật");
         JButton btnDelete = new JButton("Xóa sinh viên");
         JButton btnRefresh = new JButton("Làm mới");
 
         panelButtons.add(btnAdd);
+        panelButtons.add(btnUpdate);
         panelButtons.add(btnDelete);
         panelButtons.add(btnRefresh);
 
-        panelBottom.add(panelButtons);
+        panelBottom.add(panelButtons, BorderLayout.SOUTH);
+
+        panelBottom.setBorder(
+            BorderFactory.createEmptyBorder(5, 10, 10, 10)
+        );
+
         add(panelBottom, BorderLayout.SOUTH);
 
-        // 4. Thêm sinh viên
-        btnAdd.addActionListener(e -> {
-            try {
-                String studentID = txtStudentID.getText().trim();
-                String fullName = txtFullName.getText().trim();
-                String email = txtEmail.getText().trim();
-                String dobText = txtDob.getText().trim();
+        // ==========================================
+        // 2. SỰ KIỆN CÁC NÚT
+        // ==========================================
 
-                LocalDate dob = dobText.isEmpty()
-                    ? null : LocalDate.parse(dobText);
+        btnAdd.addActionListener(e -> addStudent());
 
-                String gender = txtGender.getText().trim();
-                String phone = txtPhone.getText().trim();
-                String address = txtAddress.getText().trim();
-                String major = txtMajor.getText().trim();
-                String className = txtClassName.getText().trim();
-                String gpaText = txtGpa.getText().trim();
+        btnUpdate.addActionListener(e -> updateStudent());
 
-                if (studentID.isEmpty()
-                        || fullName.isEmpty()
-                        || gpaText.isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Vui lòng nhập mã sinh viên, họ tên và GPA!"
-                    );
-                    return;
-                }
+        btnDelete.addActionListener(e -> deleteStudent());
 
-                double gpa = Double.parseDouble(gpaText);
-
-                if (gpa < 0 || gpa > 4) {
-                    JOptionPane.showMessageDialog(
-                        this, "GPA phải nằm trong khoảng từ 0 đến 4!"
-                    );
-                    return;
-                }
-
-                Student student = new Student(
-                    studentID, fullName, email, dob, gender,
-                    phone, address, major, className, gpa
-                );
-
-                if (studentDAO.addStudent(student)) {
-                    JOptionPane.showMessageDialog(
-                        this, "Thêm sinh viên thành công!"
-                    );
-
-                    clearFields();
-                    loadDataToTable();
-                } else {
-                    JOptionPane.showMessageDialog(
-                        this,
-                        "Thêm thất bại! Kiểm tra mã sinh viên hoặc CSDL.",
-                        "Lỗi",
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                }
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(
-                    this, "GPA phải là số hợp lệ!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE
-                );
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(
-                    this, "Dữ liệu không hợp lệ: " + ex.getMessage(),
-                    "Lỗi", JOptionPane.ERROR_MESSAGE
-                );
-            }
-        });
-
-        // 5. Xóa sinh viên
-        btnDelete.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(
-                    this, "Vui lòng chọn sinh viên cần xóa!"
-                );
-                return;
-            }
-
-            int modelRow = table.convertRowIndexToModel(selectedRow);
-            String studentID = tableModel.getValueAt(modelRow, 0).toString();
-
-            int confirm = JOptionPane.showConfirmDialog(
-                this,
-                "Bạn có chắc muốn xóa sinh viên " + studentID + "?",
-                "Xác nhận xóa",
-                JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                if (studentDAO.deleteStudent(studentID)) {
-                    JOptionPane.showMessageDialog(
-                        this, "Xóa sinh viên thành công!"
-                    );
-
-                    clearFields();
-                    loadDataToTable();
-                } else {
-                    JOptionPane.showMessageDialog(
-                        this, "Xóa sinh viên thất bại!",
-                        "Lỗi", JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
-
-        // 6. LÀM MỚI: XÓA TRẮNG FORM VÀ BẢNG
         btnRefresh.addActionListener(e -> {
             clearFields();
-            tableModel.setRowCount(0);
+            loadDataToTable();
         });
 
-        // 7. Chọn sinh viên trên bảng để hiện thông tin
+        // Chọn sinh viên trên bảng để hiển thị thông tin
         table.getSelectionModel().addListSelectionListener(e -> {
+
             if (!e.getValueIsAdjusting()) {
+
                 int selectedRow = table.getSelectedRow();
 
                 if (selectedRow != -1) {
+
                     int modelRow =
                         table.convertRowIndexToModel(selectedRow);
 
-                    txtStudentID.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 0))
-                    );
-                    txtFullName.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 1))
-                    );
-                    txtEmail.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 2))
-                    );
-
-                    Object dob = tableModel.getValueAt(modelRow, 3);
-                    txtDob.setText(dob == null ? "" : dob.toString());
-
-                    txtGender.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 4))
-                    );
-                    txtPhone.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 5))
-                    );
-                    txtAddress.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 6))
-                    );
-                    txtMajor.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 7))
-                    );
-                    txtClassName.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 8))
-                    );
-                    txtGpa.setText(
-                        String.valueOf(tableModel.getValueAt(modelRow, 9))
-                    );
+                    displayStudentInfo(modelRow);
                 }
             }
         });
-
-        // 8. Tải dữ liệu lúc mở ứng dụng
-        loadDataToTable();
     }
 
-    // Xóa trắng các ô nhập liệu
+    // ==========================================
+    // 3. LẤY DỮ LIỆU TỪ FORM
+    // ==========================================
+
+    private Student getStudentFromForm() throws Exception {
+
+        String studentID = txtStudentID.getText().trim();
+        String fullName = txtFullName.getText().trim();
+
+        String email = txtEmail.getText().trim();
+        String dobText = txtDob.getText().trim();
+
+        String gender = txtGender.getText().trim();
+        String phone = txtPhone.getText().trim();
+
+        String address = txtAddress.getText().trim();
+        String major = txtMajor.getText().trim();
+
+        String className = txtClassName.getText().trim();
+        String gpaText = txtGpa.getText().trim();
+
+        // Kiểm tra thông tin bắt buộc
+        if (studentID.isEmpty() || fullName.isEmpty()) {
+
+            throw new Exception(
+                "Vui lòng nhập mã sinh viên và họ tên!"
+            );
+        }
+
+        // Kiểm tra ngày sinh
+        Date birthDate = null;
+
+        if (!dobText.isEmpty()) {
+
+            try {
+                birthDate = Date.valueOf(dobText);
+
+            } catch (IllegalArgumentException e) {
+
+                throw new Exception(
+                    "Ngày sinh phải có định dạng YYYY-MM-DD!"
+                );
+            }
+        }
+
+        // Kiểm tra GPA
+        Double gpa = null;
+
+        if (!gpaText.isEmpty()) {
+
+            try {
+                gpa = Double.parseDouble(gpaText);
+
+            } catch (NumberFormatException e) {
+
+                throw new Exception("GPA phải là số hợp lệ!");
+            }
+
+            if (gpa < 0 || gpa > 4) {
+
+                throw new Exception(
+                    "GPA phải nằm trong khoảng từ 0 đến 4!"
+                );
+            }
+        }
+
+        // Thứ tự tham số đúng với Student.java
+        return new Student(
+            studentID,
+            fullName,
+            birthDate,
+            gender,
+            email,
+            phone,
+            address,
+            major,
+            className,
+            gpa
+        );
+    }
+
+    // ==========================================
+    // 4. THÊM SINH VIÊN
+    // ==========================================
+
+    private void addStudent() {
+
+        try {
+
+            Student student = getStudentFromForm();
+
+            boolean success = studentDAO.addStudent(student);
+
+            if (success) {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Thêm sinh viên thành công!",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+
+                clearFields();
+                loadDataToTable();
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Thêm sinh viên thất bại!\n"
+                        + "Mã sinh viên có thể đã tồn tại.",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                e.getMessage(),
+                "Thông báo",
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    // ==========================================
+    // 5. CẬP NHẬT SINH VIÊN
+    // ==========================================
+
+    private void updateStudent() {
+
+        if (table.getSelectedRow() == -1) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Vui lòng chọn sinh viên cần cập nhật!",
+                "Thông báo",
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
+        try {
+
+            Student student = getStudentFromForm();
+
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc chắn muốn cập nhật thông tin sinh viên "
+                    + student.getStudentId() + "?",
+                "Xác nhận cập nhật",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            boolean success = studentDAO.updateStudent(student);
+
+            if (success) {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Cập nhật sinh viên thành công!"
+                );
+
+                clearFields();
+                loadDataToTable();
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Cập nhật sinh viên thất bại!",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                e.getMessage(),
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    // ==========================================
+    // 6. XÓA SINH VIÊN
+    // ==========================================
+
+    private void deleteStudent() {
+
+        int selectedRow = table.getSelectedRow();
+
+        if (selectedRow == -1) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Vui lòng chọn sinh viên cần xóa!",
+                "Thông báo",
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
+        int modelRow =
+            table.convertRowIndexToModel(selectedRow);
+
+        String studentID = tableModel.getValueAt(
+            modelRow,
+            0
+        ).toString();
+
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Bạn có chắc chắn muốn xóa sinh viên "
+                + studentID + "?\n"
+                + "Các dữ liệu liên quan có thể bị xóa theo khóa ngoại.",
+            "Xác nhận xóa",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+
+            boolean success = studentDAO.deleteStudent(studentID);
+
+            if (success) {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Xóa sinh viên thành công!"
+                );
+
+                clearFields();
+                loadDataToTable();
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Xóa sinh viên thất bại!",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Lỗi khi xóa sinh viên: " + e.getMessage(),
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    // ==========================================
+    // 7. HIỂN THỊ THÔNG TIN SINH VIÊN
+    // ==========================================
+
+    private void displayStudentInfo(int row) {
+
+        txtStudentID.setText(
+            String.valueOf(tableModel.getValueAt(row, 0))
+        );
+
+        txtFullName.setText(
+            String.valueOf(tableModel.getValueAt(row, 1))
+        );
+
+        txtEmail.setText(
+            getCellText(row, 2)
+        );
+
+        txtDob.setText(
+            getCellText(row, 3)
+        );
+
+        txtGender.setText(
+            getCellText(row, 4)
+        );
+
+        txtPhone.setText(
+            getCellText(row, 5)
+        );
+
+        txtAddress.setText(
+            getCellText(row, 6)
+        );
+
+        txtMajor.setText(
+            getCellText(row, 7)
+        );
+
+        txtClassName.setText(
+            getCellText(row, 8)
+        );
+
+        txtGpa.setText(
+            getCellText(row, 9)
+        );
+    }
+
+    // Lấy dữ liệu trong ô, xử lý giá trị null
+    private String getCellText(int row, int column) {
+
+        Object value = tableModel.getValueAt(row, column);
+
+        return value == null ? "" : value.toString();
+    }
+
+    // ==========================================
+    // 8. XÓA TRẮNG FORM
+    // ==========================================
+
     private void clearFields() {
+
         txtStudentID.setText("");
         txtFullName.setText("");
         txtEmail.setText("");
@@ -298,42 +572,64 @@ public class StudentView extends JFrame {
         table.clearSelection();
     }
 
-    // Tải danh sách sinh viên từ MySQL
+    // ==========================================
+    // 9. TẢI DANH SÁCH SINH VIÊN TỪ MYSQL
+    // ==========================================
+
     private void loadDataToTable() {
+
         tableModel.setRowCount(0);
 
         try {
+
             List<Student> list = studentDAO.getAllStudents();
 
             for (Student s : list) {
+
                 Object[] row = {
-                    s.getStudentID(),
+
+                    s.getStudentId(),
+
                     s.getFullName(),
+
                     s.getEmail(),
-                    s.getDateOfBirth(),
+
+                    s.getBirthDate(),
+
                     s.getGender(),
+
                     s.getPhone(),
+
                     s.getAddress(),
+
                     s.getMajor(),
+
                     s.getClassName(),
+
                     s.getGpa()
                 };
 
                 tableModel.addRow(row);
             }
 
-        } catch (Exception ex) {
+        } catch (Exception e) {
+
             JOptionPane.showMessageDialog(
                 this,
-                "Không thể tải danh sách sinh viên!\n" + ex.getMessage(),
-                "Lỗi CSDL",
+                "Không thể tải danh sách sinh viên!\n"
+                    + e.getMessage(),
+                "Lỗi cơ sở dữ liệu",
                 JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
-    // Chạy chương trình
+    // ==========================================
+    // 10. CHẠY RIÊNG GIAO DIỆN
+    // ==========================================
+
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> {
             new StudentView().setVisible(true);
         });

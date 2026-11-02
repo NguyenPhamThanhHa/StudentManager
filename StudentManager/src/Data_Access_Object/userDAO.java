@@ -1,53 +1,44 @@
+
 package Data_Access_Object;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import view.DBConnection;
 import model.User;
+import view.DBConnection;
 
 public class userDAO {
 
     public User login(String username, String password) {
 
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = """
+            SELECT user_id, username, password, role, student_id
+            FROM users
+            WHERE username = ? AND password = ?
+        """;
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            if (conn == null) {
-                System.out.println("KHONG KET NOI DUOC DATABASE!");
-                return null;
-            }
+            ps.setString(1, username);
+            ps.setString(2, password);
 
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
 
-                ps.setString(1, username.trim());
-                ps.setString(2, password.trim());
-
-                System.out.println("Username dang nhap: [" + username + "]");
-                System.out.println("Password dang nhap: [" + password + "]");
-
-                try (ResultSet rs = ps.executeQuery()) {
-
-                    if (rs.next()) {
-                        System.out.println("TIM THAY TAI KHOAN!");
-                        System.out.println("Role: " + rs.getString("role"));
-
-                        return new User(
-                            rs.getInt("user_id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role"),
-                            rs.getString("student_id")
-                        );
-                    } else {
-                        System.out.println("KHONG TIM THAY TAI KHOAN!");
-                    }
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("user_id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("student_id")
+                    );
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
