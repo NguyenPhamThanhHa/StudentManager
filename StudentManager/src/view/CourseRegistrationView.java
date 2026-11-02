@@ -27,10 +27,6 @@ public class CourseRegistrationView extends JFrame {
 
     private final String studentID;
 
-    // ==========================================
-    // CONSTRUCTOR
-    // ==========================================
-
     public CourseRegistrationView(String studentID) {
 
         this.studentID = studentID;
@@ -82,7 +78,7 @@ public class CourseRegistrationView extends JFrame {
 
         add(pnlHeader, BorderLayout.NORTH);
 
-        // Bảng danh sách lớp học phần
+        // Bảng lớp học phần
         String[] columns = {
             "Mã lớp HP",
             "Mã môn học",
@@ -106,7 +102,6 @@ public class CourseRegistrationView extends JFrame {
         table = new JTable(tableModel);
 
         table.setRowHeight(28);
-
         table.setSelectionMode(
             ListSelectionModel.SINGLE_SELECTION
         );
@@ -115,9 +110,7 @@ public class CourseRegistrationView extends JFrame {
             JTable.AUTO_RESIZE_ALL_COLUMNS
         );
 
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        add(scrollPane, BorderLayout.CENTER);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
         // Khu vực tìm kiếm
         txtSearch = new JTextField(25);
@@ -133,7 +126,6 @@ public class CourseRegistrationView extends JFrame {
         pnlSearch.add(txtSearch);
         pnlSearch.add(btnRefresh);
 
-        // Khu vực nút chức năng
         JPanel pnlButtons = new JPanel(
             new FlowLayout(FlowLayout.CENTER, 15, 10)
         );
@@ -151,7 +143,7 @@ public class CourseRegistrationView extends JFrame {
 
         add(pnlBottom, BorderLayout.SOUTH);
 
-        // Sắp xếp và tìm kiếm trên bảng
+        // Tìm kiếm và sắp xếp
         TableRowSorter<DefaultTableModel> sorter =
             new TableRowSorter<>(tableModel);
 
@@ -223,7 +215,7 @@ public class CourseRegistrationView extends JFrame {
 
             for (CourseClass courseClass : classes) {
 
-                tableModel.addRow(new Object[]{
+                tableModel.addRow(new Object[] {
 
                     courseClass.getClassId(),
 
@@ -313,7 +305,7 @@ public class CourseRegistrationView extends JFrame {
         String academicYear =
             tableModel.getValueAt(modelRow, 5).toString();
 
-        // Nội dung xác nhận
+        // Xác nhận đăng ký
         String message =
             "Bạn có chắc chắn muốn đăng ký lớp học phần này?\n\n"
             + "Mã lớp HP: " + classId + "\n"
@@ -335,7 +327,7 @@ public class CourseRegistrationView extends JFrame {
             return;
         }
 
-        // Thực hiện đăng ký
+        // Thực hiện đăng ký và lưu vào MySQL
         try {
 
             boolean success = registrationDAO.registerClass(
@@ -347,12 +339,13 @@ public class CourseRegistrationView extends JFrame {
 
                 JOptionPane.showMessageDialog(
                     this,
-                    "Đăng ký học phần thành công!",
+                    "Đăng ký học phần thành công!\n"
+                    + "Thông tin đã được lưu vào lịch sử đăng ký.",
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE
                 );
 
-                // Cập nhật lại danh sách và sĩ số
+                // Cập nhật lại danh sách lớp và sĩ số
                 loadCourseClasses();
 
             } else {
@@ -361,7 +354,7 @@ public class CourseRegistrationView extends JFrame {
                     this,
                     "Đăng ký không thành công!\n"
                     + "Có thể lớp đã đầy, đã đóng đăng ký "
-                    + "hoặc bạn đã đăng ký lớp học phần này.",
+                    + "hoặc bạn đã đăng ký lớp này.",
                     "Lỗi đăng ký",
                     JOptionPane.ERROR_MESSAGE
                 );
