@@ -1,191 +1,137 @@
-# STUDENT MANAGEMENT SYSTEM AND COURSE REGISTRATION
+# Student Management System and Course Registration
 
-# 1. Introduction
+A Java desktop application for managing student information, courses, and course registrations using Java Swing and MySQL.
 
-The Student Management System and Course Registration is a Java application designed to manage student information, courses, and course registration processes. The system helps simplify administrative tasks in educational institutions while ensuring accuracy, convenience, and efficiency in course registration.
+## 1. Introduction
 
-The application features a graphical user interface built with Java Swing, uses Java Collections for in-memory data processing, and connects to a MySQL database through JDBC for data storage and retrieval. In addition, the system incorporates exception handling and file handling to improve reliability and support data backup and export.
+This project was developed to simplify academic management and course registration processes. It provides a graphical user interface for managing students, courses, registrations, and statistical reports.
 
-# 2. Main Features
+The application uses Java Swing for the user interface, JDBC for database connectivity, and MySQL for data storage. It also applies Object-Oriented Programming (OOP), Java Collections Framework, file handling, and exception handling.
 
-# Student Management
+## 2. Main Features
 
-- Add new students
-- Update student information (date of birth, student ID, address, and phone number)
-- Delete student records
-- Search for students
-- Display the list of students
-- Validate input data before adding or updating records
-- Prevent duplicate student IDs
+- **Student Management:** Add, update, delete, search, and display student records.
+- **Course Management:** Manage course information, credit hours, and instructors.
+- **Course Registration:** Register and cancel courses, prevent duplicate registrations, and manage enrollment records.
+- **Statistics and Reports:** Count students, courses, registrations, and calculate registered credit hours.
+- **File Handling:** Import and export data using CSV or TXT files.
+- **Input Validation:** Validate data and handle exceptions to improve system reliability.
 
-# Course Management
+## 3. Technologies Used
 
-- Add new courses
-- Update course information, including course code, course name, credit hours, and instructor
-- Delete courses when the relevant conditions are satisfied
-- Search for courses by course code or course name
-- Display the list of available courses
-- Validate course information
-- Prevent duplicate course codes
+| Category | Technologies |
+|---|---|
+| Programming Language | Java |
+| GUI Framework | Java Swing |
+| Database | MySQL |
+| Database Connectivity | JDBC |
+| Programming Concepts | OOP, Java Collections |
+| Additional Techniques | File Handling, Exception Handling |
+| Development Tools | Visual Studio Code, MySQL Workbench |
+| Version Control | Git & GitHub |
 
-# Course Registration Management
+## 4. Database Design
 
-- Allow students to register for courses
-- Display the courses registered by each student
-- Cancel course registrations
-- Retrieve the list of students registered for a specific course
-- Verify that both students and courses exist before registration
-- Prevent duplicate course registrations
-- Validate the number of registered courses or total credit hours according to system-defined limits
-- Display course registration details for each student
+The system consists of three main entities:
 
-# Statistics and Reports
+- **Student:** Stores student information.
+- **Course:** Stores course information.
+- **Enrollment:** Manages course registration records and relationships between students and courses.
 
-- Display the total number of students
-- Display the total number of courses
-- Count the number of students registered for each course
-- Calculate the total registered credit hours for each student
-- Retrieve the list of students enrolled in a specific course
-- Display statistical reports through the graphical user interface
+Primary keys and foreign keys are used to maintain data integrity.
 
-# Data Management and File Handling
+## 5. Installation and Setup
 
-- Export student records to CSV or TXT files
-- Export course records to CSV or TXT files
-- Export course registration records to files
-- Import data from files for initial data entry
-- Display notifications when file operations are completed successfully
-- Handle missing files, access permission errors, and invalid file data
+### 5.1. System Requirements
 
-# User Interface
+- JDK 17 or later.
+- MySQL Server 8.0 or later.
+- Visual Studio Code or Eclipse.
+- MySQL Connector/J.
 
-- Build the graphical user interface using Java Swing
-- Display data using JTable
-- Use JTextField for data entry
-- Use JButton to perform operations such as adding, updating, deleting, searching, and registering for courses
-- Use JComboBox to select courses and predefined values
-- Use JOptionPane to display notifications, warnings, and confirmation dialogs
-- Organize the interface into student management, course management, course registration, and statistics sections
+### 5.2. Clone the Repository
 
-# 3. Technologies Used
+Open the terminal and execute:
 
-**- Programming Language:** Java
+```bash
+git clone https://github.com/NguyenPhamThanhHa/StudentManager.git
+cd StudentManager
+```
 
-**- GUI:** Java Swing
+### 5.3. Database Configuration
 
-**- Database:** MySQL
+Create the database in MySQL:
 
-**- Database Connectivity:** JDBC
+```sql
+CREATE DATABASE student_management;
+```
 
-**- Core Concepts:** Object-Oriented Programming (OOP), Java Collections Framework
+Execute the SQL script provided in the project to create the required tables.
 
-**- Additional Techniques:** File Handling and Exception Handling
+Configure the database connection in `DBConnection.java`:
 
-# 4. Database Design
+```java
+private static final String URL =
+    "jdbc:mysql://localhost:3306/student_management";
 
-# The system is designed around three main entities:
+private static final String USER = "root";
 
-**- Student:** Stores student information.
+private static final String PASSWORD = "your_password";
+```
 
-**- Course:** Stores course information.
+Replace `your_password` with your local MySQL password.
 
-**- Enrollment:** Stores course registration records and establishes relationships between students and courses.
+### 5.4. Install MySQL Connector/J
 
-Primary keys and foreign keys are used to maintain data integrity and relationships between database records.
+Download MySQL Connector/J from the official website:
 
-=======================================================
+https://dev.mysql.com/downloads/connector/j/
 
-# HỆ THỐNG QUẢN LÝ SINH VIÊN VÀ ĐĂNG KÝ HỌC PHẦN
+Extract the downloaded package and place the `.jar` file inside the project's `lib` folder.
 
-# 1. Giới thiệu
+### 5.5. Run the Application
 
-Hệ thống quản lý sinh viên và đăng ký học phần là ứng dụng được xây dựng bằng ngôn ngữ Java nhằm hỗ trợ quản lý thông tin sinh viên, học phần và quá trình đăng ký môn học. Hệ thống giúp đơn giản hóa công tác quản lý trong các trường học, đồng thời đảm bảo tính chính xác, thuận tiện và hiệu quả trong quá trình đăng ký học phần.
+Make sure MySQL Server is running and the database has been configured.
 
-Ứng dụng được phát triển với giao diện đồ họa Java Swing, sử dụng Java Collections để xử lý dữ liệu trong chương trình và kết nối cơ sở dữ liệu MySQL thông qua JDBC để lưu trữ, truy xuất thông tin. Ngoài ra, hệ thống áp dụng xử lý ngoại lệ và xử lý file nhằm nâng cao độ ổn định và hỗ trợ sao lưu, xuất dữ liệu.
+Open the project directory in Visual Studio Code and execute:
 
-# 2. Chức năng chính
+```powershell
+.\run.bat
+```
 
-# Quản lý sinh viên
+Alternatively, double-click `run.bat` to automatically compile and launch the application.
 
-- Thêm sinh viên mới
-- Cập nhật thông tin sinh viên (ngày tháng năm sinh, mã số sinh viên, địa chỉ, số điện thoại)
-- Xoá sinh viên
-- Tìm kiếm sinh viên
-- Hiển thị danh sách sinh viên
-- Kiểm tra tính hợp lệ của dữ liệu trước khi thêm hoặc cập nhật.
-- Ngăn chặn việc tạo sinh viên trùng mã số sinh viên
+**Note:** Make sure JDK is installed, MySQL Connector/J is available in the `lib` folder, and the database connection settings are correct before running the application.
 
-# Quản lý học phần
+## 6. Screenshots
 
-- Thêm học phần mới
-- Cập nhật thông tin học phần, bao gồm mã học phần, tên học phần, số tín chỉ và giảng viên phụ trách
-- Xóa học phần khỏi hệ thống khi đáp ứng các điều kiện liên quan
-- Tìm kiếm học phần theo mã hoặc tên học phần
-- Hiển thị danh sách học phần hiện có
-- Kiểm tra tính hợp lệ của thông tin học phần
-- Ngăn chặn việc tạo học phần trùng mã
+### Main Dashboard
 
-# Quản lý đăng ký học phần
+<!-- Add main dashboard screenshot here -->
 
-- Cho phép sinh viên đăng ký học phần
-- Hiển thị danh sách học phần mà sinh viên đã đăng ký
-- Hủy đăng ký học phần
-- Tra cứu danh sách sinh viên đăng ký một học phần
-- Kiểm tra sinh viên và học phần có tồn tại trước khi đăng ký
-- Ngăn chặn sinh viên đăng ký trùng một học phần
--Kiểm tra số lượng học phần hoặc tổng số tín chỉ đăng ký theo giới hạn do hệ thống quy định
-- Hiển thị thông tin đăng ký của từng sinh viên
+### Student Management
 
-# Thống kê và báo cáo
+<!-- Add student management screenshot here -->
 
-- Thống kê tổng số sinh viên
-- Thống kê tổng số học phần
-- Thống kê số lượng sinh viên đăng ký từng học phần
-- Thống kê tổng số tín chỉ mỗi sinh viên đã đăng ký
-- Tra cứu danh sách sinh viên theo học phần
-- Hiển thị kết quả thống kê trên giao diện
+### Course Management
 
-#  Quản lý dữ liệu và xử lý file
+<!-- Add course management screenshot here -->
 
-- Xuất danh sách sinh viên ra file CSV hoặc TXT
-- Xuất danh sách học phần ra file CSV hoặc TXT
-- Xuất danh sách đăng ký học phần ra file
-- Đọc dữ liệu từ file để hỗ trợ nhập dữ liệu ban đầu
-- Thông báo khi xuất hoặc đọc file thành công
-- Xử lý các trường hợp không tìm thấy file, không có quyền truy cập hoặc dữ liệu trong file không hợp lệ
+### Course Registration
 
-# Giao diện người dùng
+<!-- Add course registration screenshot here -->
 
-- Xây dựng giao diện bằng Java Swing
-- Hiển thị dữ liệu bằng JTable
-- Sử dụng JTextField để nhập thông tin
-- Sử dụng JButton để thực hiện các thao tác thêm, sửa, xóa, tìm kiếm và đăng ký
-- Sử dụng JComboBox để lựa chọn học phần hoặc các giá trị có sẵn
-- Sử dụng JOptionPane để hiển thị thông báo, cảnh báo và xác nhận thao tác
-- Bố trí giao diện thành các khu vực quản lý sinh viên, quản lý học phần, đăng ký học phần và thống kê
+## 7. Future Improvements
 
-# 3. Công nghệ sử dụng
+- Implement role-based authentication.
+- Improve user interface and user experience.
+- Add Excel and PDF export functionality.
+- Enhance search and reporting features.
+- Improve database security and application performance.
 
-**- Ngôn ngữ lập trình:** Java
+## 8. Author
 
-**- Giao diện:** Java Swing
-
-**- Cơ sở dữ liệu:** MySQL
-
-**- Kết nối cơ sở dữ liệu:** JDBC
-
-**- Kiến thức áp dụng:** Lập trình hướng đối tượng (OOP), Java Collections Framework
-
-**- Kỹ thuật bổ sung:** Xử lý file và xử lý ngoại lệ
-
-# 4. Thiết kế cơ sở dữ liệu
-
-# Hệ thống dự kiến gồm ba thực thể chính:
-
-**- Student:** Lưu trữ thông tin sinh viên.
-
-**- Course:** Lưu trữ thông tin học phần.
-
-**- Enrollment:** Lưu trữ thông tin đăng ký và liên kết sinh viên với học phần.
- 
-Các khóa chính và khóa ngoại giúp duy trì tính toàn vẹn dữ liệu và mối quan hệ giữa các bản ghi.
+**Nguyen Pham Thanh Ha**
+- **University:** Gia Dinh University
+- **Major:** Software Engineering
+- **GitHub:** [NguyenPhamThanhHa](https://github.com/NguyenPhamThanhHa)
