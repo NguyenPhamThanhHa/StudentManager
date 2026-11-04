@@ -12,7 +12,6 @@ import model.CourseClass;
 import Data_Access_Object.CourseDAO;
 
 public class CourseSectionView extends JFrame {
-
     private JTable table;
     private DefaultTableModel tableModel;
     private TableRowSorter<DefaultTableModel> sorter;

@@ -18,7 +18,7 @@ public class StudentDAO {
 
             ps.setString(1, s.getStudentId());
             ps.setString(2, s.getFullName());
-            ps.setDate(3, s.getBirthDate());
+            ps.setDate(3, (Date) s.getBirthDate());
             ps.setString(4, s.getGender());
             ps.setString(5, s.getEmail());
             ps.setString(6, s.getPhone());
@@ -72,7 +72,7 @@ public class StudentDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, s.getFullName());
-            ps.setDate(2, s.getBirthDate());
+            ps.setDate(2, (Date) s.getBirthDate());
             ps.setString(3, s.getGender());
             ps.setString(4, s.getEmail());
             ps.setString(5, s.getPhone());
