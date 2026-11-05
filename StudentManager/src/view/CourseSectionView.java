@@ -31,7 +31,7 @@ public class CourseSectionView extends JFrame {
 
         courseDAO = new CourseDAO();
 
-        setTitle("Quản lý mở lớp theo học kỳ");
+        setTitle("Quản lý học phần");
         setSize(1150, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,7 +47,7 @@ public class CourseSectionView extends JFrame {
     private void initComponents() {
 
         JLabel lblTitle = new JLabel(
-                "QUẢN LÝ MỞ LỚP THEO HỌC KỲ",
+                "QUẢN LÝ LỚP HỌC PHẦN",
                 JLabel.CENTER
         );
 

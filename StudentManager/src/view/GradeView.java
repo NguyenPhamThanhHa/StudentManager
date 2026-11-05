@@ -85,20 +85,26 @@ public class GradeView extends JFrame {
 
         // BẢNG ĐIỂM
 
-        String[] columns = adminMode
-                ? new String[]{
-                    "Mã đăng ký",
-                    "Mã sinh viên",
-                    "Họ và tên",
-                    "Mã học phần",
-                    "Tên học phần",
-                    "Điểm"
-                }
-                : new String[]{
-                    "Mã học phần",
-                    "Tên học phần",
-                    "Điểm"
-                };
+      String[] columns = adminMode
+        ? new String[]{
+            "Mã đăng ký",
+            "Mã sinh viên",
+            "Họ và tên",
+            "Mã học phần",
+            "Tên học phần",
+            "Điểm giữa kỳ",
+            "Điểm cuối kỳ",
+            "Tổng kết",
+            "Kết quả"
+        }
+        : new String[]{
+            "Mã học phần",
+            "Tên học phần",
+            "Điểm giữa kỳ",
+            "Điểm cuối kỳ",
+            "Tổng kết",
+            "Kết quả"
+        };
 
         tableModel = new DefaultTableModel(columns, 0) {
 
@@ -268,124 +274,185 @@ public class GradeView extends JFrame {
                     ? "Chưa có điểm"
                     : r.getScore();
 
-            tableModel.addRow(new Object[]{
-                r.getRegistrationId(),
-                r.getStudentId(),
-                r.getFullName(),
-                r.getCourseId(),
-                r.getCourseName(),
-                score
-            });
+          tableModel.addRow(new Object[]{
+    r.getRegistrationId(),
+    r.getStudentId(),
+    r.getFullName(),
+    r.getCourseId(),
+    r.getCourseName(),
+    r.getMidtermScore() == null ? "Chưa có điểm" : r.getMidtermScore(),
+    r.getFinalScore() == null ? "Chưa có điểm" : r.getFinalScore(),
+    score,
+    r.getResult()
+    });
         }
     }
 
     // ==========================================
     // ADMIN: NHẬP / CẬP NHẬT ĐIỂM
-    // ==========================================
-    private void updateGrade() {
 
-        if (!adminMode) {
-            return;
-        }
 
-        int selectedRow = table.getSelectedRow();
+private void updateGrade() {
 
-        if (selectedRow == -1) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Vui lòng chọn sinh viên cần cập nhật điểm!"
-            );
-
-            return;
-        }
-
-        int modelRow = table.convertRowIndexToModel(selectedRow);
-
-        int registrationId = Integer.parseInt(
-                tableModel.getValueAt(modelRow, 0).toString()
-        );
-
-        String studentName =
-                tableModel.getValueAt(modelRow, 2).toString();
-
-        Object currentScore =
-                tableModel.getValueAt(modelRow, 5);
-
-        String initialValue = currentScore.equals("Chưa có điểm")
-                ? ""
-                : currentScore.toString();
-
-        String input = JOptionPane.showInputDialog(
-                this,
-                "Nhập điểm cho sinh viên: " + studentName
-                + "\nĐiểm hợp lệ từ 0 đến 10:",
-                initialValue
-        );
-
-        if (input == null) {
-            return;
-        }
-
-        input = input.trim().replace(',', '.');
-
-        try {
-
-            double score = Double.parseDouble(input);
-
-            if (!Double.isFinite(score)
-                    || score < 0 || score > 10) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Điểm phải nằm trong khoảng từ 0 đến 10!"
-                );
-
-                return;
-            }
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Xác nhận cập nhật điểm "
-                    + score + " cho sinh viên " + studentName + "?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (confirm != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            boolean success = registrationDAO.updateGrade(
-                    registrationId,
-                    score
-            );
-
-            if (success) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Cập nhật điểm thành công!"
-                );
-
-                loadStudentsByClass();
-
-            } else {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Cập nhật điểm thất bại!"
-                );
-            }
-
-        } catch (NumberFormatException e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Vui lòng nhập điểm bằng số hợp lệ!"
-            );
-        }
+    if (!adminMode) {
+        return;
     }
+
+    int selectedRow = table.getSelectedRow();
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Vui lòng chọn sinh viên cần cập nhật điểm!"
+        );
+        return;
+    }
+
+    int modelRow = table.convertRowIndexToModel(selectedRow);
+
+    int registrationId = Integer.parseInt(
+            tableModel.getValueAt(modelRow, 0).toString()
+    );
+
+    String studentName =
+            tableModel.getValueAt(modelRow, 2).toString();
+
+    // Lấy điểm giữa kỳ hiện tại
+    Object currentMidterm = tableModel.getValueAt(modelRow, 5);
+
+    String initialMidterm = currentMidterm.equals("Chưa có điểm")
+            ? ""
+            : currentMidterm.toString();
+
+    // Lấy điểm cuối kỳ hiện tại
+    Object currentFinal = tableModel.getValueAt(modelRow, 6);
+
+    String initialFinal = currentFinal.equals("Chưa có điểm")
+            ? ""
+            : currentFinal.toString();
+
+    // Tạo hai ô nhập điểm
+    JTextField txtMidterm = new JTextField(initialMidterm, 10);
+    JTextField txtFinal = new JTextField(initialFinal, 10);
+
+    JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 12));
+
+    inputPanel.add(new JLabel("Sinh viên:"));
+    inputPanel.add(new JLabel(studentName));
+
+    inputPanel.add(new JLabel("Điểm giữa kỳ:"));
+    inputPanel.add(txtMidterm);
+
+    inputPanel.add(new JLabel("Điểm cuối kỳ:"));
+    inputPanel.add(txtFinal);
+
+    inputPanel.add(new JLabel("Công thức tổng kết:"));
+    inputPanel.add(new JLabel("30% giữa kỳ + 70% cuối kỳ"));
+
+    int option = JOptionPane.showConfirmDialog(
+            this,
+            inputPanel,
+            "Nhập / Cập nhật điểm",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE
+    );
+
+    if (option != JOptionPane.OK_OPTION) {
+        return;
+    }
+
+    try {
+
+        String midtermInput = txtMidterm.getText()
+                .trim().replace(',', '.');
+
+        String finalInput = txtFinal.getText()
+                .trim().replace(',', '.');
+
+        // Kiểm tra dữ liệu nhập
+        if (midtermInput.isEmpty() || finalInput.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Vui lòng nhập đầy đủ điểm giữa kỳ và cuối kỳ!"
+            );
+            return;
+        }
+
+        double midtermScore = Double.parseDouble(midtermInput);
+        double finalExamScore = Double.parseDouble(finalInput);
+
+        //Kiểm tra điểm từ 0 đến 10
+        if (!Double.isFinite(midtermScore)
+                || !Double.isFinite(finalExamScore)
+                || midtermScore < 0 || midtermScore > 10
+                || finalExamScore < 0 || finalExamScore > 10) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Điểm phải nằm trong khoảng từ 0 đến 10!"
+            );
+            return;
+        }
+
+        // Hệ thống tự tính điểm tổng kết
+        double totalScore = Math.round(
+                (midtermScore * 0.3 + finalExamScore * 0.7) * 100.0
+        ) / 100.0;
+
+        String result = totalScore >= 5 ? "Đạt" : "Rớt";
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Sinh viên: " + studentName
+                + "\nĐiểm giữa kỳ: " + midtermScore
+                + "\nĐiểm cuối kỳ: " + finalExamScore
+                + "\nĐiểm tổng kết: " + totalScore
+                + "\nKết quả: " + result
+                + "\n\nXác nhận lưu điểm?",
+                "Xác nhận cập nhật",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // Gửi hai đầu điểm xuống DAO
+        boolean success = registrationDAO.updateGrade(
+                registrationId,
+                midtermScore,
+                finalExamScore
+        );
+
+        if (success) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cập nhật điểm thành công!"
+            );
+
+            loadStudentsByClass();
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cập nhật điểm thất bại!"
+            );
+        }
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Vui lòng nhập điểm bằng số hợp lệ!"
+        );
+
+    } catch (Exception e) {
+        showError(e);
+    }
+}
+
 
     // ==========================================
     // SINH VIÊN: XEM BẢNG ĐIỂM
@@ -408,10 +475,13 @@ public class GradeView extends JFrame {
                     : r.getScore();
 
             tableModel.addRow(new Object[]{
-                r.getCourseId(),
-                r.getCourseName(),
-                score
-            });
+    r.getCourseId(),
+    r.getCourseName(),
+    r.getMidtermScore() == null ? "Chưa có điểm" : r.getMidtermScore(),
+    r.getFinalScore() == null ? "Chưa có điểm" : r.getFinalScore(),
+    score,
+    r.getResult()
+});
         }
     }
 

@@ -12,15 +12,28 @@ public class Registration {
     private String courseId;
     private String courseName;
     private Date registrationDate;
+
+    
+    // Điểm thành phần
+    private Double midtermScore;
+    private Double finalScore;
+    
+    // Điểm tổng kết
     private Double score;
 
     public Registration() {
     }
 
-    public Registration(int registrationId, String studentId,
-                        String fullName, int classId,
-                        String courseId, String courseName,
-                        Date registrationDate, Double score) {
+    public Registration(
+            int registrationId,
+            String studentId,
+            String fullName,
+            int classId,
+            String courseId,
+            String courseName,
+            Date registrationDate,
+            Double score
+    ) {
         this.registrationId = registrationId;
         this.studentId = studentId;
         this.fullName = fullName;
@@ -28,6 +41,31 @@ public class Registration {
         this.courseId = courseId;
         this.courseName = courseName;
         this.registrationDate = registrationDate;
+        this.score = score;
+    }
+
+    // Constructor bổ sung điểm giữa kỳ và cuối kỳ
+    public Registration(
+            int registrationId,
+            String studentId,
+            String fullName,
+            int classId,
+            String courseId,
+            String courseName,
+            Date registrationDate,
+            Double midtermScore,
+            Double finalScore,
+            Double score
+    ) {
+        this.registrationId = registrationId;
+        this.studentId = studentId;
+        this.fullName = fullName;
+        this.classId = classId;
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.registrationDate = registrationDate;
+        this.midtermScore = midtermScore;
+        this.finalScore = finalScore;
         this.score = score;
     }
 
@@ -87,11 +125,48 @@ public class Registration {
         this.registrationDate = registrationDate;
     }
 
+    public Double getMidtermScore() {
+        return midtermScore;
+    }
+
+    public void setMidtermScore(Double midtermScore) {
+        this.midtermScore = midtermScore;
+    }
+
+    public Double getFinalScore() {
+        return finalScore;
+    }
+
+    public void setFinalScore(Double finalScore) {
+        this.finalScore = finalScore;
+    }
+
     public Double getScore() {
         return score;
     }
 
     public void setScore(Double score) {
         this.score = score;
+    }
+
+    // Tính điểm tổng kết: giữa kỳ 30%, cuối kỳ 70%
+    public Double calculateFinalScore() {
+    if (midtermScore == null || finalScore == null) {
+        return null;
+    }
+
+    return Math.round(
+        (midtermScore * 0.3 + finalScore * 0.7) * 100.0
+    ) / 100.0;
+}
+
+    // Xác định kết quả học phần
+    public String getResult() {
+
+        if (score == null) {
+            return "Chưa có điểm";
+        }
+
+        return score >= 5.0 ? "Đạt" : "Rớt";
     }
 }

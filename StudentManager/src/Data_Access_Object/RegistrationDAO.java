@@ -95,6 +95,7 @@ public class RegistrationDAO {
 
     // ==========================================
     // 2. ADMIN XEM TẤT CẢ ĐĂNG KÝ
+    // Bổ sung midterm_score, final_score
     // ==========================================
     public List<Registration> getAllRegistrations() {
 
@@ -103,7 +104,8 @@ public class RegistrationDAO {
         String sql = """
             SELECT r.registration_id, r.student_id, s.full_name,
                    r.class_id, c.course_id, c.course_name,
-                   r.registration_date, r.score
+                   r.registration_date,
+                   r.midterm_score, r.final_score, r.score
             FROM registrations r
             JOIN students s ON r.student_id = s.student_id
             JOIN course_classes cc ON r.class_id = cc.class_id
@@ -128,6 +130,7 @@ public class RegistrationDAO {
 
     // ==========================================
     // 3. SINH VIÊN XEM LỊCH SỬ ĐĂNG KÝ
+    // Bổ sung hai đầu điểm
     // ==========================================
     public List<Registration> getRegistrationsByStudent(String studentId) {
 
@@ -136,7 +139,8 @@ public class RegistrationDAO {
         String sql = """
             SELECT r.registration_id, r.student_id, s.full_name,
                    r.class_id, c.course_id, c.course_name,
-                   r.registration_date, r.score
+                   r.registration_date,
+                   r.midterm_score, r.final_score, r.score
             FROM registrations r
             JOIN students s ON r.student_id = s.student_id
             JOIN course_classes cc ON r.class_id = cc.class_id
@@ -310,6 +314,7 @@ public class RegistrationDAO {
 
     // ==========================================
     // 6. ADMIN LẤY DANH SÁCH SINH VIÊN THEO LỚP
+    // Lấy thêm điểm giữa kỳ và cuối kỳ
     // ==========================================
     public List<Registration> getRegistrationsByClass(int classId) {
 
@@ -318,7 +323,8 @@ public class RegistrationDAO {
         String sql = """
             SELECT r.registration_id, r.student_id, s.full_name,
                    r.class_id, c.course_id, c.course_name,
-                   r.registration_date, r.score
+                   r.registration_date,
+                   r.midterm_score, r.final_score, r.score
             FROM registrations r
             JOIN students s ON r.student_id = s.student_id
             JOIN course_classes cc ON r.class_id = cc.class_id
@@ -348,26 +354,135 @@ public class RegistrationDAO {
 
     // ==========================================
     // 7. ADMIN NHẬP / CẬP NHẬT ĐIỂM
+    // Nhập điểm giữa kỳ và cuối kỳ
+    // Hệ thống tự tính điểm tổng kết
     // ==========================================
-    public boolean updateGrade(int registrationId, double score) {
+    public boolean updateGrade(
+            int registrationId,
+            double midtermScore,
+            double finalExamScore) {
 
-        if (!Double.isFinite(score) || score < 0 || score > 10) {
+        // Kiểm tra điểm hợp lệ
+        if (!Double.isFinite(midtermScore)
+                || !Double.isFinite(finalExamScore)
+                || midtermScore < 0 || midtermScore > 10
+                || finalExamScore < 0 || finalExamScore > 10) {
+
             return false;
         }
 
-        String sql = """
+        // Công thức tính tổng kết: 30% giữa kỳ, 70% cuối kỳ
+        double totalScore = Math.round(
+                (midtermScore * 0.3 + finalExamScore * 0.7) * 100.0
+        ) / 100.0;
+
+        String updateGradeSql = """
             UPDATE registrations
-            SET score = ?
+            SET midterm_score = ?,
+                final_score = ?,
+                score = ?
             WHERE registration_id = ?
         """;
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        // Lấy mã sinh viên sau khi cập nhật điểm
+        String findStudentSql = """
+            SELECT student_id
+            FROM registrations
+            WHERE registration_id = ?
+        """;
 
-            ps.setDouble(1, score);
-            ps.setInt(2, registrationId);
+        // Lấy GPA đã tính từ view
+        String getGpaSql = """
+            SELECT gpa
+            FROM v_student_gpa
+            WHERE student_id = ?
+        """;
 
-            return ps.executeUpdate() > 0;
+        // Cập nhật GPA vào bảng students
+        String updateGpaSql = """
+            UPDATE students
+            SET gpa = ?
+            WHERE student_id = ?
+        """;
+
+        try (Connection conn = DBConnection.getConnection()) {
+
+            conn.setAutoCommit(false);
+
+            try {
+
+                // Cập nhật hai đầu điểm và điểm tổng kết
+                try (PreparedStatement ps =
+                             conn.prepareStatement(updateGradeSql)) {
+
+                    ps.setDouble(1, midtermScore);
+                    ps.setDouble(2, finalExamScore);
+                    ps.setDouble(3, totalScore);
+                    ps.setInt(4, registrationId);
+
+                    if (ps.executeUpdate() == 0) {
+                        conn.rollback();
+                        return false;
+                    }
+                }
+
+                //Tìm sinh viên có điểm vừa cập nhật
+                String studentId;
+
+                try (PreparedStatement ps =
+                             conn.prepareStatement(findStudentSql)) {
+
+                    ps.setInt(1, registrationId);
+
+                    try (ResultSet rs = ps.executeQuery()) {
+
+                        if (!rs.next()) {
+                            conn.rollback();
+                            return false;
+                        }
+
+                        studentId = rs.getString("student_id");
+                    }
+                }
+
+                // Lấy GPA mới từ view
+                double gpa = 0.0;
+
+                try (PreparedStatement ps =
+                             conn.prepareStatement(getGpaSql)) {
+
+                    ps.setString(1, studentId);
+
+                    try (ResultSet rs = ps.executeQuery()) {
+
+                        if (rs.next()) {
+                            gpa = rs.getDouble("gpa");
+                        }
+                    }
+                }
+
+                // Lưu GPA vào bảng students
+                try (PreparedStatement ps =
+                             conn.prepareStatement(updateGpaSql)) {
+
+                    ps.setDouble(1, gpa);
+                    ps.setString(2, studentId);
+
+                    ps.executeUpdate();
+                }
+
+                conn.commit();
+                return true;
+
+            } catch (SQLException e) {
+
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+
+            } finally {
+                conn.setAutoCommit(true);
+            }
 
         } catch (SQLException e) {
 
@@ -386,7 +501,8 @@ public class RegistrationDAO {
         String sql = """
             SELECT r.registration_id, r.student_id, s.full_name,
                    r.class_id, c.course_id, c.course_name,
-                   r.registration_date, r.score
+                   r.registration_date,
+                   r.midterm_score, r.final_score, r.score
             FROM registrations r
             JOIN students s ON r.student_id = s.student_id
             JOIN course_classes cc ON r.class_id = cc.class_id
@@ -421,8 +537,13 @@ public class RegistrationDAO {
     private Registration mapRegistration(ResultSet rs)
             throws SQLException {
 
-        double scoreValue = rs.getDouble("score");
+        double midtermValue = rs.getDouble("midterm_score");
+        Double midtermScore = rs.wasNull() ? null : midtermValue;
 
+        double finalValue = rs.getDouble("final_score");
+        Double finalScore = rs.wasNull() ? null : finalValue;
+
+        double scoreValue = rs.getDouble("score");
         Double score = rs.wasNull() ? null : scoreValue;
 
         return new Registration(
@@ -433,6 +554,8 @@ public class RegistrationDAO {
                 rs.getString("course_id"),
                 rs.getString("course_name"),
                 rs.getDate("registration_date"),
+                midtermScore,
+                finalScore,
                 score
         );
     }
